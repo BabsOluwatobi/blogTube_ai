@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogTube AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+     @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to { 
+                transform: rotate(360deg);
+            }
+        }
+         
+        
+         @-webkit-keyframes rotate {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+            to { 
+                -webkit-transform: rotate(360deg);
+            }
+        }
+        
+        .load {
+            width: 100px;
+            height: 100px;
+            margin: 110px auto 0;
+            border:solid 10px #aa2222;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+             -webkit-transition: all 0.5s ease-in;
+            -webkit-animation-name:             rotate; 
+            -webkit-animation-duration:         1.0s; 
+            -webkit-animation-iteration-count:  infinite;
+            -webkit-animation-timing-function: linear;
+                
+                 transition: all 0.5s ease-in;
+            animation-name:             rotate; 
+            animation-duration:         1.0s; 
+            animation-iteration-count:  infinite;
+            animation-timing-function: linear; 
+        }
+
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100 font-sans antialiased">
+ <!-- navbar --> 
+   <nav class="bg-red-600 p-4 text-white flex justify-between">
+    <div>
+        <h1 class="text-3xl font-bold"> BlogTube AI</h1>
+        </div>
+        <div>
+            <a href="logout" class="text-white hover:underline">Welcome {{user.username}}</a>
+            <a href="logout" class="text-white hover:underline">logout</a>
+            </div>
+    </nav> 
+     <br>
+    <br>
+    <!--main-->
+   
+
+    <div class="flex-grow container mx-auto mt-10 px-4 sm:px-0">
+        <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md transition-trasnform transform hover:scale-105 flex flex-col">
+            <!--introdution-->
+            <div class="text-center">
+                
+                <h2 class="text-2xl font-semibold mb-4">BlogTube AI</h2>
+                <p class="text-gray-700"> Turn YouTube Videos into High-Quality Blog Articles Instantly with AI!
+Just paste the link to any YouTube video, and let our intelligent tool transform its content into a well-written, SEO-friendly blog post—automatically and effortlessly. </p>
+
+                </div>
+        <br>
+           <!--link section--> 
+           
+            <div>
+                <h2 class="tex-xl mb-4 font-semibold">Enter YouTube Link </h2>
+                <div class="flex space-x-4">
+                <input type="ur" id="youtubeLink" placeholder="Paste youtube link...." class="flex-grow p-2 border border-red-400 rounded-l-md">
+                <button onclick="" id="generateBlogBtn" class="bg-red-600 text-white px-4 rounded-r-md hover:bg-red-700 transition-colors">Generate</button>
+                </div>
+            
+            </div> 
+
+            <!--section for loading circle--> 
+            <div style="display: none;" id="loading-circle" class="load">
+                
+                
+                </div>
+
+
+             <!--generated Blog--> 
+              <section class="mt-10 flex-grow">
+                <h2 class="text-xl mb-4 font-semibold">Generated Blog Article </h2>
+                <div id="blogContent" class="mt-2 text-gray-700 space-y-4">
+                    
+                    </div>
+              </section>
+            </div>
+        
+        
+            </div>
+            <footer class="text-center p-4 text-black mt-6">
+                Powered by <a href="https://havitech.com.ng">Hav'ilah</a>
+                
+                </footer>
+                <script>
+        document.getElementById('generateBlogBtn').addEventListener('click', async () => {
+            
+            const youtubeLink = document.getElementById('youtubeLink').value;
+            const blogContent = document.getElementById('blogContent');
+            
+            if(youtubeLink) {
+                document.getElementById('loading-circle').style.display = 'block';
+                
+                blogContent.innerHTML = ''; // Clear previous content
+
+                const endpointUrl = '/generate-blog';
+                
+                try {
+                    const response = await fetch(endpointUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ link: youtubeLink })
+                    });
+
+                    const data = await response.json();
+
+                    blogContent.innerHTML = data.content;
+
+                } catch (error) {
+                    console.error("Error occurred:", error);
+                    alert("Something went wrong. Please try again later.");
+                    
+                }
+                document.getElementById('loading-circle').style.display = 'none';
+            } else {
+                alert("Please enter a YouTube link.");
+            }
+        });
+    </script>
+</body>
+</html>
